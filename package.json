@@ -1,0 +1,17 @@
+{
+  "name": "mongodb-practicum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MongoDB practicum lab: modeling, aggregation, indexes and CRUD",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "mongodb": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

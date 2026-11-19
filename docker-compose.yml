@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: practicum-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-REPLACE_ME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-REPLACE_ME}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-practicum}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./db/init/seed.js:/docker-entrypoint-initdb.d/seed.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: practicum-mongo-express
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME:-REPLACE_ME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-REPLACE_ME}
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME:-REPLACE_ME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD:-REPLACE_ME}
+    ports:
+      - "8081:8081"
+
+volumes:
+  mongo-data:
